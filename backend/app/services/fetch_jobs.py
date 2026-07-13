@@ -10,5 +10,5 @@ async def fetch_jobs():
         print(response.text[:200])
 
         response.raise_for_status()
-
+    
     return response.json()["jobs"]
