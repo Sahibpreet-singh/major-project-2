@@ -1,35 +1,36 @@
-from app.db.database import SessionLocal
-from app.models.job import Job
+from sqlalchemy import select
+from backend.app.models.job import Job
 
 
-def save_jobs(jobs):
+def save_jobs(db, jobs):
 
-    db = SessionLocal()
+    saved = 0
 
-    try:
+    for item in jobs:
 
-        for item in jobs:
+        exists = (
+            db.query(Job)
+            .filter(Job.source_id == item["id"])
+            .first()
+        )
 
-            exists = (
-                db.query(Job)
-                .filter(Job.job_url == item["job_url"])
-                .first()
+        if exists:
+            continue
+
+        db.add(
+            Job(
+                source_id=item["id"],
+                title=item["title"],
+                company=item["company_name"],
+                location=item["candidate_required_location"],
+                job_type=item["job_type"],
+                category=item["category"],
+                salary=item.get("salary"),
             )
+        )
 
-            if exists:
-                continue
+        saved += 1
 
-            db.add(
-                Job(
-                    title=item["title"],
-                    company=item["company"],
-                    location=item["location"],
-                    salary=item.get("salary"),
-                    job_url=item["job_url"],
-                )
-            )
+    db.commit()
 
-        db.commit()
-
-    finally:
-        db.close()
+    return saved
