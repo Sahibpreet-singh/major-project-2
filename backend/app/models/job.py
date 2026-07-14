@@ -7,13 +7,25 @@ class Job(Base):
     __tablename__ = "jobs"
 
     id = Column(Integer, primary_key=True, index=True)
+    
     source_id = Column(Integer, unique=True, index=True)
+
     title = Column(String)
     company = Column(String)
-    location = Column(String)
-    job_type = Column(String)
+    
+    company_logo=Column(String)
+
+    job_url=Column(String,unique=True)
+
     category = Column(String)
+    job_type = Column(String)
+    location = Column(String)
+    
     salary = Column(String)
+
+    description=Column(String)
+
+    published_date=Column(DateTime)
 
     created_at = Column(
         DateTime,

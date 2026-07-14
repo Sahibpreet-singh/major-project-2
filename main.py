@@ -43,8 +43,8 @@ async def analytics_overview():
 @app.post("/jobs/save")
 async def save_jobs_to_db(db: Session = Depends(get_db)):
 
-    jobs = await fetch_jobs()
-    
+    jobs = await clean_all_jobs()
+
     count = save_jobs(db, jobs)
 
     return {

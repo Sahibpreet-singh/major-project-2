@@ -1,27 +1,66 @@
 from backend.app.models.job import Job
+from backend.app.models.skill import Skill
+from backend.app.models.job_skill import JobSkill
 
 
 def save_jobs(db, jobs):
 
-    saved_count = 0
+    saved = 0
 
-    for job in jobs:
-        db_job = Job(
-            source_id=job.get("id"),
-            title=job.get("title"),
-            company=job.get("company_name"),
-            location=job.get("candidate_required_location"),
-            job_type=job.get("job_type"),
-            category=job.get("category"),
-            salary=job.get("salary")
+    for item in jobs:
+
+        exists = (
+            db.query(Job)
+            .filter(Job.source_id == item["id"])
+            .first()
         )
 
-        db.add(db_job)
-        saved_count += 1
+        if exists:
+            continue
+
+        new_job = Job(
+            source_id=item["id"],
+            title=item["title"],
+            company=item["company"],
+            company_logo=item.get("company_logo"),
+            job_url=item["job_url"],
+            category=item["category"],
+            job_type=item["job_type"],
+            location=item["location"],
+            salary=item.get("salary"),
+            description=item.get("description"),
+            published_date=item.get("published_date")
+        )
+
+        db.add(new_job)
+        db.flush()
+
+        for tag in item.get("tags", []):
+
+            skill = (
+                db.query(Skill)
+                .filter(Skill.name == tag)
+                .first()
+            )
+
+            if not skill:
+                skill = Skill(name=tag)
+                db.add(skill)
+                db.flush()
+
+            db.add(
+                JobSkill(
+                    job_id=new_job.id,
+                    skill_id=skill.id
+                )
+            )
+
+        saved += 1
 
     db.commit()
 
-    return saved_count
+    return saved
+
 
 def get_all_jobs(db):
 
