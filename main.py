@@ -9,9 +9,16 @@ from fastapi import Depends
 from backend.app.services.job_service import get_all_jobs
 from backend.app.dependencies import get_db
 from backend.app.services.job_service import save_jobs
-from backend.app.services.analytic import get_overview
 from backend.app.scheduler.job_scheduler import start_scheduler
-
+from backend.app.services.analytic import (
+    get_overview,
+    get_top_skills,
+    get_top_companies,
+    get_top_categories,
+    get_top_locations,
+    get_job_types,
+    get_salary_overview
+)
 app = FastAPI()
 
 @app.on_event("startup")
@@ -51,4 +58,40 @@ async def save_jobs_to_db(db: Session = Depends(get_db)):
         "count": count
     }
 
+@app.get("/analytics/top-skills")
+def top_skills(db: Session = Depends(get_db)):
+    return get_top_skills(db)
 
+@app.get("/analytics/overview")
+def analytics_overview(db: Session = Depends(get_db)):
+    return get_overview(db)
+
+
+@app.get("/analytics/top-skills")
+def analytics_top_skills(db: Session = Depends(get_db)):
+    return get_top_skills(db)
+
+
+@app.get("/analytics/top-companies")
+def analytics_top_companies(db: Session = Depends(get_db)):
+    return get_top_companies(db)
+
+
+@app.get("/analytics/top-categories")
+def analytics_top_categories(db: Session = Depends(get_db)):
+    return get_top_categories(db)
+
+
+@app.get("/analytics/top-locations")
+def analytics_top_locations(db: Session = Depends(get_db)):
+    return get_top_locations(db)
+
+
+@app.get("/analytics/job-types")
+def analytics_job_types(db: Session = Depends(get_db)):
+    return get_job_types(db)
+
+
+@app.get("/analytics/salary-overview")
+def analytics_salary_overview(db: Session = Depends(get_db)):
+    return get_salary_overview(db)
