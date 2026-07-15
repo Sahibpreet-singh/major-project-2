@@ -1,13 +1,17 @@
-import pandas as pd
+from backend.app.models.job import Job
+from backend.app.models.skill import Skill
+from backend.app.models.job_skill import JobSkill
 
+def get_overview(db):
+    total_jobs=db.query(Job).count()
+    total_companies=(
+        db.query(Job.company).distinct().count()
+    )
+    total_skills=db.query(Skill).count()
 
-async def overview(jobs):
-    df=pd.DataFrame(jobs)
-
-    return {
-        "total_jobs":len(df),
-        "columns":df.columns.tolist(),
-        "shape":df.shape,
-
+    return{
+        "total_jobs": total_jobs,
+        "total_companies": total_companies,
+        "total_skills": total_skills,
     }
     

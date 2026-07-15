@@ -9,7 +9,7 @@ from fastapi import Depends
 from backend.app.services.job_service import get_all_jobs
 from backend.app.dependencies import get_db
 from backend.app.services.job_service import save_jobs
-from backend.app.services.analytic import overview
+from backend.app.services.analytic import get_overview
 from backend.app.scheduler.job_scheduler import start_scheduler
 
 app = FastAPI()
@@ -35,10 +35,9 @@ async def print_jobs():
     return jobs
 
 @app.get("/analytic/overview")
-async def analytics_overview():
-    jobs=await fetch_jobs()
-    cleaned_jobs=cleaned_jobs(jobs)
-    return await overview(cleaned_jobs)
+def analytics_overview(db: Session = Depends(get_db)):
+    return get_overview(db)
+    
 
 @app.post("/jobs/save")
 async def save_jobs_to_db(db: Session = Depends(get_db)):
