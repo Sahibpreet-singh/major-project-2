@@ -57,7 +57,7 @@ export default function JobCard({ job }) {
         {job.posted_at && (
           <span className="flex items-center gap-1 ml-auto">
             <RiTimeLine />
-            {timeAgo(job.posted_at)}
+            {timeAgo(job.published_date)}
           </span>
         )}
       </div>

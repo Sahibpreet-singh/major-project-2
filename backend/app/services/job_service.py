@@ -2,7 +2,15 @@ from sqlalchemy import or_
 from backend.app.models.job import Job
 from backend.app.models.skill import Skill
 from backend.app.models.job_skill import JobSkill
+from fastapi import HTTPException
 
+def get_job_by_id(db, job_id):
+    job = db.query(Job).filter(Job.id == job_id).first()
+
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+
+    return job
 
 def save_jobs(db, jobs):
 

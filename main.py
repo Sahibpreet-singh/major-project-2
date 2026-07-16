@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from backend.app.services.job_service import get_job_by_id
 from backend.app.services.fetch_jobs import fetch_jobs
 from backend.app.services.clean_jobs import clean_all_jobs
 from fastapi import Depends
@@ -20,7 +21,20 @@ from backend.app.services.analytic import (
     get_job_types,
     get_salary_overview
 )
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.on_event("startup")
 async def startup_event():
@@ -30,15 +44,12 @@ async def startup_event():
 def root():
     return {"message": "Backend is running!"}
 
-
-
-
 @app.get("/clean-jobs")
 async def print_jobs():
     jobs=await clean_all_jobs()
     return jobs
 
-@app.get("/analytic/overview")
+@app.get("/analytics/overview")
 def analytics_overview(db: Session = Depends(get_db)):
     return get_overview(db)
     
@@ -54,14 +65,6 @@ async def save_jobs_to_db(db: Session = Depends(get_db)):
         "message": "Jobs saved",
         "count": count
     }
-
-@app.get("/analytics/top-skills")
-def top_skills(db: Session = Depends(get_db)):
-    return get_top_skills(db)
-
-@app.get("/analytics/overview")
-def analytics_overview(db: Session = Depends(get_db)):
-    return get_overview(db)
 
 
 @app.get("/analytics/top-skills")
@@ -119,3 +122,10 @@ def get_jobs(
         page=page,
         limit=limit,
     )
+
+@app.get("/jobs/{job_id}", response_model=JobResponse)
+def job_details(
+    job_id: int,
+    db: Session = Depends(get_db)
+):
+    return get_job_by_id(db, job_id)

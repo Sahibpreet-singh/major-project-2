@@ -31,7 +31,7 @@ export default function Jobs() {
       const params = { page, limit: LIMIT, search: search || undefined }
       Object.entries(filters).forEach(([k, v]) => { if (v) params[k] = v })
       const res = await getJobs(params)
-      setJobs(res?.jobs || res?.data || res || [])
+      setJobs(res?.results || [])
       setTotal(res?.total || 0)
     } catch (e) {
       console.error(e)

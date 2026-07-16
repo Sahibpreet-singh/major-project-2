@@ -26,11 +26,12 @@ export default function JobDetails() {
   useEffect(() => {
     // Fetch by searching for this specific id — adapt if backend adds /jobs/:id
     getJobs({ limit: 100 })
-      .then((res) => {
-        const list = res?.jobs || res?.data || res || []
-        const found = list.find((j) => String(j.id) === String(id))
-        setJob(found || null)
-      })
+  .then((res) => {
+    const list = res?.results || []
+    const found = list.find(j => String(j.id) === String(id))
+
+    setJob(found || null)
+  })
       .catch(console.error)
       .finally(() => setLoading(false))
   }, [id])
@@ -82,9 +83,9 @@ export default function JobDetails() {
               <span className="text-sm text-text-muted">{job.company}</span>
             </div>
           </div>
-          {job.url && (
+          {job.job_url && (
             <a
-              href={job.url}
+              href={job.job_url}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-primary flex items-center gap-1.5 flex-shrink-0 text-xs"
@@ -114,10 +115,10 @@ export default function JobDetails() {
               {job.salary}
             </span>
           )}
-          {job.posted_at && (
+          {job.published_date && (
             <span className="flex items-center gap-1.5 ml-auto">
               <RiTimeLine />
-              {timeAgo(job.posted_at)}
+              {timeAgo(job.published_date)}
             </span>
           )}
         </div>

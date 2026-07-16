@@ -37,16 +37,23 @@ export default function Dashboard() {
 
   useEffect(() => {
     Promise.all([
-      getOverview(),
-      getTopSkills(),
-      getTopCompanies(),
-      getJobs({ limit: 6, sort: 'newest' }),
-    ]).then(([ov, sk, co, jobs]) => {
-      setOverview(ov)
-      setSkills((sk?.data || sk || []).slice(0, 8))
-      setCompanies((co?.data || co || []).slice(0, 6))
-      setRecentJobs(jobs?.jobs || jobs?.data || jobs || [])
-    }).catch(console.error)
+  getOverview(),
+  getTopSkills(),
+  getTopCompanies(),
+  getJobs({ limit: 6, sort: 'newest' }),
+]).then(([ov, sk, co, jobs]) => {
+
+  console.log("Overview:", ov)
+  console.log("Skills:", sk)
+  console.log("Companies:", co)
+  console.log("Jobs:", jobs)
+
+  setOverview(ov)
+  setSkills(sk)
+  setCompanies(co)
+  setRecentJobs(jobs.results || [])
+
+}).catch(console.error)
       .finally(() => setLoading(false))
   }, [])
 

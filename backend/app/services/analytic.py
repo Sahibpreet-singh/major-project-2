@@ -6,7 +6,6 @@ from backend.app.models.job_skill import JobSkill
 
 
 def get_overview(db):
-
     return {
         "total_jobs": db.query(Job).count(),
         "total_companies": db.query(Job.company).distinct().count(),
@@ -15,11 +14,10 @@ def get_overview(db):
 
 
 def get_top_skills(db, limit=10):
-
     results = (
         db.query(
             Skill.name,
-            func.count(JobSkill.job_id).label("jobs")
+            func.count(JobSkill.job_id).label("count")
         )
         .join(JobSkill, Skill.id == JobSkill.skill_id)
         .group_by(Skill.id, Skill.name)
@@ -29,20 +27,16 @@ def get_top_skills(db, limit=10):
     )
 
     return [
-        {
-            "skill": skill,
-            "jobs": jobs
-        }
-        for skill, jobs in results
+        {"name": name, "count": count}
+        for name, count in results
     ]
 
 
 def get_top_companies(db, limit=10):
-
     results = (
         db.query(
             Job.company,
-            func.count(Job.id).label("jobs")
+            func.count(Job.id).label("count")
         )
         .group_by(Job.company)
         .order_by(func.count(Job.id).desc())
@@ -51,20 +45,16 @@ def get_top_companies(db, limit=10):
     )
 
     return [
-        {
-            "company": company,
-            "jobs": jobs
-        }
-        for company, jobs in results
+        {"name": name, "count": count}
+        for name, count in results
     ]
 
 
 def get_top_categories(db, limit=10):
-
     results = (
         db.query(
             Job.category,
-            func.count(Job.id).label("jobs")
+            func.count(Job.id).label("count")
         )
         .group_by(Job.category)
         .order_by(func.count(Job.id).desc())
@@ -73,20 +63,16 @@ def get_top_categories(db, limit=10):
     )
 
     return [
-        {
-            "category": category,
-            "jobs": jobs
-        }
-        for category, jobs in results
+        {"name": name, "count": count}
+        for name, count in results
     ]
 
 
 def get_top_locations(db, limit=10):
-
     results = (
         db.query(
             Job.location,
-            func.count(Job.id).label("jobs")
+            func.count(Job.id).label("count")
         )
         .group_by(Job.location)
         .order_by(func.count(Job.id).desc())
@@ -95,20 +81,16 @@ def get_top_locations(db, limit=10):
     )
 
     return [
-        {
-            "location": location,
-            "jobs": jobs
-        }
-        for location, jobs in results
+        {"name": name, "count": count}
+        for name, count in results
     ]
 
 
 def get_job_types(db):
-
     results = (
         db.query(
             Job.job_type,
-            func.count(Job.id).label("jobs")
+            func.count(Job.id).label("count")
         )
         .group_by(Job.job_type)
         .order_by(func.count(Job.id).desc())
@@ -116,16 +98,12 @@ def get_job_types(db):
     )
 
     return [
-        {
-            "job_type": job_type,
-            "jobs": jobs
-        }
-        for job_type, jobs in results
+        {"name": name, "count": count}
+        for name, count in results
     ]
 
 
 def get_salary_overview(db):
-
     with_salary = (
         db.query(Job)
         .filter(Job.salary.isnot(None))
@@ -138,8 +116,7 @@ def get_salary_overview(db):
         .count()
     )
 
-    return {
-        "with_salary": with_salary,
-        "without_salary": without_salary,
-        "total_jobs": with_salary + without_salary
-    }
+    return [
+        {"name": "With Salary", "avg_salary": with_salary},
+        {"name": "Without Salary", "avg_salary": without_salary},
+    ]
