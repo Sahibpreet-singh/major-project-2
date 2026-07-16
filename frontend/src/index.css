@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: #0A0A0F;
+    color: #E2E8F0;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0A0A0F;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #1E1E2E;
+    border-radius: 2px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #6366F1;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-bg-card border border-bg-border rounded-xl;
+  }
+
+  .card-elevated {
+    @apply bg-bg-elevated border border-bg-border rounded-xl;
+  }
+
+  .btn-primary {
+    @apply bg-accent text-white px-4 py-2 rounded-lg text-sm font-medium
+           hover:bg-accent-hover transition-colors duration-150 cursor-pointer;
+  }
+
+  .btn-ghost {
+    @apply text-text-muted px-3 py-2 rounded-lg text-sm font-medium
+           hover:bg-bg-elevated hover:text-text-primary transition-colors duration-150 cursor-pointer;
+  }
+
+  .input {
+    @apply bg-bg-elevated border border-bg-border rounded-lg px-3 py-2 text-sm
+           text-text-primary placeholder-text-muted outline-none
+           focus:border-accent transition-colors duration-150 w-full;
+  }
+
+  .tag {
+    @apply text-xs font-mono px-2 py-0.5 rounded-md border;
+  }
+
+  .tag-accent {
+    @apply tag bg-accent-soft border-accent/30 text-accent;
+  }
+
+  .tag-muted {
+    @apply tag bg-bg-elevated border-bg-border text-text-muted;
+  }
+}
+
+@layer utilities {
+  .animate-blink {
+    animation: blink 1.1s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .stat-border-glow {
+    position: relative;
+  }
+
+  .stat-border-glow::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #6366F1;
+    border-radius: 2px 0 0 2px;
+    opacity: 0;
+    animation: borderFadeIn 0.6s ease forwards;
+  }
+
+  @keyframes borderFadeIn {
+    to { opacity: 1; }
+  }
+
+  .fade-in {
+    animation: fadeIn 0.3s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
