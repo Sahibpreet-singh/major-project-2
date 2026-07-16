@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from backend.app.services.fetch_jobs import fetch_jobs
-from backend.app.services.cleaned import clean_all_jobs
+from backend.app.services.clean_jobs import clean_all_jobs
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from backend.app.schemas.job_schema import JobResponse
@@ -10,6 +10,7 @@ from backend.app.services.job_service import get_all_jobs
 from backend.app.dependencies import get_db
 from backend.app.services.job_service import save_jobs
 from backend.app.scheduler.job_scheduler import start_scheduler
+from backend.app.services.job_service import search_jobs
 from backend.app.services.analytic import (
     get_overview,
     get_top_skills,
@@ -30,11 +31,7 @@ def root():
     return {"message": "Backend is running!"}
 
 
-@app.get("/jobs")
-def get_jobs(
-    db: Session = Depends(get_db)
-):
-    return get_all_jobs(db)
+
 
 @app.get("/clean-jobs")
 async def print_jobs():
@@ -95,3 +92,30 @@ def analytics_job_types(db: Session = Depends(get_db)):
 @app.get("/analytics/salary-overview")
 def analytics_salary_overview(db: Session = Depends(get_db)):
     return get_salary_overview(db)
+
+@app.get("/jobs")
+def get_jobs(
+    search: str | None = None,
+    company: str | None = None,
+    location: str | None = None,
+    category: str | None = None,
+    job_type: str | None = None,
+    skill: str | None = None,
+    sort: str = "newest",
+    page: int = 1,
+    limit: int = 20,
+    db: Session = Depends(get_db)
+):
+
+    return search_jobs(
+        db=db,
+        search=search,
+        company=company,
+        location=location,
+        category=category,
+        job_type=job_type,
+        skill=skill,
+        sort=sort,
+        page=page,
+        limit=limit,
+    )

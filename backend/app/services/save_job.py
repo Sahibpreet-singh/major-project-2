@@ -11,7 +11,10 @@ def save_jobs(db, jobs):
 
         exists = (
             db.query(Job)
-            .filter(Job.source_id == item["id"])
+            .filter(
+                Job.source == item["source"],
+                Job.source_id == item["source_id"]
+            )
             .first()
         )
 
@@ -20,7 +23,8 @@ def save_jobs(db, jobs):
 
 
         new_job = Job(
-            source_id=item["id"],
+            source=item["source"],
+            source_id=item["source_id"],
             title=item["title"],
             company=item["company"],
             company_logo=item.get("company_logo"),

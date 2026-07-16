@@ -1,3 +1,4 @@
+from sqlalchemy import or_
 from backend.app.models.job import Job
 from backend.app.models.skill import Skill
 from backend.app.models.job_skill import JobSkill
@@ -11,7 +12,7 @@ def save_jobs(db, jobs):
 
         exists = (
             db.query(Job)
-            .filter(Job.source_id == item["id"])
+            .filter(Job.source_id == item["source_id"])
             .first()
         )
 
@@ -19,7 +20,8 @@ def save_jobs(db, jobs):
             continue
 
         new_job = Job(
-            source_id=item["id"],
+            source=item["source"],
+            source_id=item["source_id"],
             title=item["title"],
             company=item["company"],
             company_logo=item.get("company_logo"),
@@ -65,3 +67,78 @@ def save_jobs(db, jobs):
 def get_all_jobs(db):
 
     return db.query(Job).all()
+
+
+
+from sqlalchemy import or_
+from backend.app.models.job import Job
+from backend.app.models.skill import Skill
+from backend.app.models.job_skill import JobSkill
+
+
+def search_jobs(
+    db,
+    search=None,
+    company=None,
+    location=None,
+    category=None,
+    job_type=None,
+    skill=None,
+    sort="newest",
+    page=1,
+    limit=20,
+):
+
+    query = db.query(Job)
+
+    if skill:
+        query = (
+            query.join(JobSkill)
+                 .join(Skill)
+                 .filter(Skill.name.ilike(f"%{skill}%"))
+        )
+
+    if search:
+        query = query.filter(
+            or_(
+                Job.title.ilike(f"%{search}%"),
+                Job.company.ilike(f"%{search}%"),
+                Job.description.ilike(f"%{search}%")
+            )
+        )
+
+    if company:
+        query = query.filter(Job.company.ilike(f"%{company}%"))
+
+    if location:
+        query = query.filter(Job.location.ilike(f"%{location}%"))
+
+    if category:
+        query = query.filter(Job.category.ilike(f"%{category}%"))
+
+    if job_type:
+        query = query.filter(Job.job_type.ilike(f"%{job_type}%"))
+
+    if sort == "newest":
+        query = query.order_by(Job.id.desc())
+
+    elif sort == "oldest":
+        query = query.order_by(Job.id.asc())
+
+    elif sort == "company":
+        query = query.order_by(Job.company.asc())
+
+    total = query.count()
+
+    jobs = (
+        query.offset((page - 1) * limit)
+             .limit(limit)
+             .all()
+    )
+
+    return {
+        "total": total,
+        "page": page,
+        "limit": limit,
+        "results": jobs
+    }

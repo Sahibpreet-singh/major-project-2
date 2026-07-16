@@ -7,8 +7,8 @@ class Job(Base):
     __tablename__ = "jobs"
 
     id = Column(Integer, primary_key=True, index=True)
-    
-    source_id = Column(Integer, unique=True, index=True)
+    source = Column(String, nullable=False)
+    source_id = Column(String, nullable=False)
 
     title = Column(String)
     company = Column(String)

@@ -1,14 +1,13 @@
-import httpx
+from backend.app.services.ingestion.remotive import fetch_remotive_jobs
+from backend.app.services.ingestion.arbeitnow import fetch_arbeitnow_jobs
 
-JOB_API = "https://remotive.com/api/remote-jobs"
 
 async def fetch_jobs():
-    async with httpx.AsyncClient() as client:
-        response = await client.get(JOB_API)
 
-        print(response.status_code)
-        print(response.text[:200])
+    remotive_jobs = await fetch_remotive_jobs()
+    arbeitnow_jobs = await fetch_arbeitnow_jobs()
 
-        response.raise_for_status()
-    
-    return response.json()["jobs"]
+    return {
+        "remotive": remotive_jobs,
+        "arbeitnow": arbeitnow_jobs
+    }
