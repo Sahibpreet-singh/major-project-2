@@ -1,1 +1,19 @@
-pip freeze > requirements.txt
+fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary
+python-dotenv
+
+langchain
+langgraph
+langchain-core
+langchain-google-genai
+
+apscheduler
+
+httpx
+requests
+
+pydantic
+
+python-multipart
