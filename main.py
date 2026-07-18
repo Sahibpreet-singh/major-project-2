@@ -28,21 +28,18 @@ from backend.ai.providers.llm import get_llm
 from backend.ai.agent import run_agent
 from backend.ai.schemas import ChatRequest
 
+from fastapi.middleware.cors import CORSMiddleware
+
+
+
 
 app = FastAPI()
 
-from fastapi.middleware.cors import CORSMiddleware
-
-origins = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "https://major-project-2-689dnt6ok-sahibpreet-singhs-projects.vercel.app",
-]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
