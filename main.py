@@ -34,7 +34,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI()
-
+print("=== NEW DEPLOYMENT ===")
 
 app.add_middleware(
     CORSMiddleware,
@@ -50,7 +50,10 @@ async def startup_event():
 
 @app.get("/")
 def root():
-    return {"message": "Backend is running!"}
+    return {
+        "message": "Backend is running!",
+        "version": "v2"
+    }
 
 @app.get("/clean-jobs")
 async def print_jobs():
