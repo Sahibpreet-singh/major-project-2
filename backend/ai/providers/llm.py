@@ -4,7 +4,6 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 
 load_dotenv()
 import os
-print("API KEY:", os.getenv("GOOGLE_API_KEY")[:10])
 
 def get_llm():
     return ChatGoogleGenerativeAI(

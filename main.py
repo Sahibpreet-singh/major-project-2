@@ -34,7 +34,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI()
-print("=== NEW DEPLOYMENT ===")
 
 app.add_middleware(
     CORSMiddleware,
