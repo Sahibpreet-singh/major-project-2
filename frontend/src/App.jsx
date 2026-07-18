@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard'
 import Jobs from './pages/Jobs'
 import Analytics from './pages/Analytics'
 import JobDetails from './pages/JobDetails'
+import AIChat from "./pages/AIChat";
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
             <Route path="/jobs" element={<Jobs />} />
             <Route path="/jobs/:id" element={<JobDetails />} />
             <Route path="/analytics" element={<Analytics />} />
+            <Route path="/chat" element={<AIChat />} />
           </Routes>
         </main>
       </div>

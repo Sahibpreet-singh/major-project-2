@@ -22,6 +22,12 @@ from backend.app.services.analytic import (
     get_salary_overview
 )
 from fastapi.middleware.cors import CORSMiddleware
+#ai
+from backend.ai.prompts import SYSTEM_PROMPT
+from backend.ai.providers.llm import get_llm
+from backend.ai.agent import run_agent
+from backend.ai.schemas import ChatRequest
+
 
 app = FastAPI()
 
@@ -129,3 +135,21 @@ def job_details(
     db: Session = Depends(get_db)
 ):
     return get_job_by_id(db, job_id)
+
+
+
+@app.post("/chat")
+def chat(request: ChatRequest):
+    try:
+        print("Received:", request.message)
+
+        answer = run_agent(request.message)
+
+        print("Answer:", answer)
+
+        return {"answer": answer}
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise

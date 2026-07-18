@@ -4,7 +4,7 @@ const BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
 
 const api = axios.create({
   baseURL: BASE_URL,
-  timeout: 15000,
+  timeout: 120000,
   headers: { 'Content-Type': 'application/json' },
 })
 
@@ -31,4 +31,13 @@ export const getTopLocations = () => api.get('/analytics/top-locations')
 export const getJobTypes = () => api.get('/analytics/job-types')
 export const getSalaryOverview = () => api.get('/analytics/salary-overview')
 
-export default api
+//ai
+export const chat = async (message) => {
+  console.log("Sending POST request");
+
+  return api.post("/chat", {
+    message,
+  });
+};
+  
+  export default api

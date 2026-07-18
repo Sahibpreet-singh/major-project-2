@@ -4,12 +4,14 @@ import {
   RiBriefcaseLine,
   RiBarChartBoxLine,
   RiFlashlightLine,
+  RiRobot2Line,
 } from 'react-icons/ri'
 
 const navItems = [
   { to: '/', icon: RiDashboardLine, label: 'Dashboard' },
   { to: '/jobs', icon: RiBriefcaseLine, label: 'Jobs' },
   { to: '/analytics', icon: RiBarChartBoxLine, label: 'Analytics' },
+  { to: '/chat', icon: RiRobot2Line, label: 'AI Assistant' },
 ]
 
 export default function Sidebar() {
